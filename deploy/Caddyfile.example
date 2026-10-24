@@ -1,0 +1,6 @@
+# 复制到服务器后把 your-domain.example.com 改成真实域名。
+# Caddy 会自动申请和续期 HTTPS 证书，需要 80 和 443 端口开放。
+your-domain.example.com {
+  encode gzip
+  reverse_proxy app:3000
+}

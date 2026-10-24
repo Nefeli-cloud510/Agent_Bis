@@ -1,0 +1,15 @@
+.git
+.gitignore
+.env*
+!.env.example
+.next
+node_modules
+.pgdata
+data
+test-results
+playwright-report
+coverage
+README.md
+docs
+backups
+*.log
