@@ -17,6 +17,8 @@
 2. 推送包含本目录和工作流文件的提交。
 3. 演示地址形如：`https://<用户名>.github.io/Agent_Bis/`
 
+本仓库已按步骤 1 完成 Source 切换，后续对 `demo/` 目录的提交会自动触发部署。
+
 本地预览可直接用浏览器打开 `demo/index.html`，或运行：
 
 ```powershell
