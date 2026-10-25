@@ -95,13 +95,10 @@ export async function updateSessionStep(sessionId: string, step: PublicStep): Pr
   );
 }
 
-export function nextStepAfter(
-  current: PublicStep,
-  remind: number
-): PublicStep {
+export function nextStepAfter(current: PublicStep): PublicStep {
   switch (current) {
     case "history":
-      return remind === 1 ? "permission" : "task";
+      return "permission";
     case "permission":
       return "task";
     case "task":

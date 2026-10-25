@@ -2,7 +2,6 @@ import { CONSENT_CONTENT } from "@/config/content";
 import AdvanceButton from "@/components/AdvanceButton";
 import StudyShell from "@/components/StudyShell";
 import {
-  CONSENT_STEP_LABELS,
   getParticipantSession,
   redirectToCurrentStep,
   stepsForSession,
@@ -15,7 +14,7 @@ export default async function StartPage() {
   if (session && session.current_step !== "consent") {
     redirectToCurrentStep(session);
   }
-  const steps = session ? stepsForSession(session.remind) : CONSENT_STEP_LABELS;
+  const steps = stepsForSession();
 
   return (
     <StudyShell steps={steps} activeStep="consent" activePage="consent">

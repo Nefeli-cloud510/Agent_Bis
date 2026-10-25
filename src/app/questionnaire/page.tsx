@@ -14,7 +14,7 @@ export default async function QuestionnairePage() {
 
   return (
     <StudyShell
-      steps={stepsForSession(session.remind)}
+      steps={stepsForSession()}
       activeStep="questionnaire"
       activePage="questionnaire"
       narrow

@@ -14,6 +14,7 @@ type Props = {
   label: string;
   fullWidth?: boolean;
   fromStep?: string;
+  onBeforeAdvance?: () => void;
 };
 
 export default function AdvanceButton({
@@ -21,6 +22,7 @@ export default function AdvanceButton({
   label,
   fullWidth = true,
   fromStep,
+  onBeforeAdvance,
 }: Props) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
@@ -30,6 +32,7 @@ export default function AdvanceButton({
     if (pending) return;
     setPending(true);
     setError(null);
+    onBeforeAdvance?.();
     flushActivityNow();
     const body: { fromStep?: string; idempotencyKey?: string } = { fromStep };
     if (api === "/api/consent") {

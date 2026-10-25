@@ -31,7 +31,7 @@ test.describe("流程控制与数据安全", () => {
     await expect(page).toHaveURL(/\/start$/);
   });
 
-  test("无提醒组无法通过 URL 看到权限页，刷新不换位置", async ({ page }) => {
+  test("未到权限步骤时无法通过 URL 看到权限页，刷新不换位置", async ({ page }) => {
     const sessionId = await createPreviewSession(page, 5);
     sessionIds.push(sessionId);
 
@@ -42,10 +42,21 @@ test.describe("流程控制与数据安全", () => {
     await expect(page).toHaveURL(/\/records$/);
     await expect(page.getByText("AI 读取权限设置")).toHaveCount(0);
 
+    await page.getByRole("button", { name: "下一步", exact: true }).click();
+    await expect(page).toHaveURL(/\/permission$/);
+    await expect(
+      page.getByText(
+        "本次推荐，AI 只能看到【最近一次会话】内容，看不到更早记录。",
+        { exact: true }
+      )
+    ).toBeVisible();
+    await page.getByRole("button", { name: "下一步", exact: true }).click();
+    await expect(page).toHaveURL(/\/task$/);
+
     await page.goto("/questionnaire");
-    await expect(page).toHaveURL(/\/records$/);
+    await expect(page).toHaveURL(/\/task$/);
     await page.goto("/recommend");
-    await expect(page).toHaveURL(/\/records$/);
+    await expect(page).toHaveURL(/\/task$/);
   });
 
   test("同意接口幂等：相同键只创建一个会话", async ({ page }) => {

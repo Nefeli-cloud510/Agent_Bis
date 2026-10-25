@@ -15,7 +15,7 @@ export default async function RecordsPage() {
 
   return (
     <StudyShell
-      steps={stepsForSession(session.remind)}
+      steps={stepsForSession()}
       activeStep="history"
       activePage="history"
     >

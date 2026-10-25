@@ -2,8 +2,8 @@ import { PERMISSION_CONTENT } from "@/config/content";
 import AdvanceButton from "@/components/AdvanceButton";
 import StudyShell from "@/components/StudyShell";
 import {
-  redirectToCurrentStep,
   requireParticipantSession,
+  requireStep,
   stepsForSession,
 } from "@/lib/study-guard";
 
@@ -11,14 +11,12 @@ export const instant = false;
 
 export default async function PermissionPage() {
   const session = await requireParticipantSession();
-  if (session.remind !== 1 || session.current_step !== "permission") {
-    redirectToCurrentStep(session);
-  }
+  requireStep(session, "permission");
   const content = PERMISSION_CONTENT[session.scope as 1 | 2];
 
   return (
     <StudyShell
-      steps={stepsForSession(session.remind)}
+      steps={stepsForSession()}
       activeStep="permission"
       activePage="permission"
     >

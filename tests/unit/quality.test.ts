@@ -5,13 +5,13 @@ import {
 } from "@/lib/quality";
 
 describe("submission timings", () => {
-  it("stores null permission time for remind=0 groups", () => {
+  it("stores permission time for flow-v2 submissions", () => {
     const fields = computeSubmissionFields(
       { consent_active_ms: 1000, permission_active_ms: 500 },
-      false
+      true
     );
-    expect(fields.permission_active_ms).toBeNull();
-    expect(fields.total_active_ms).toBe(1000);
+    expect(fields.permission_active_ms).toBe(500);
+    expect(fields.total_active_ms).toBe(1500);
   });
 
   it("stores zero permission time only when the page was shown", () => {
@@ -47,16 +47,17 @@ describe("quality flags", () => {
     const flags = computeQualityFlags({
       answers,
       totalActiveMs: 4000,
-      permissionPageShown: false,
-      permissionActiveMs: null,
+      permissionPageShown: true,
+      permissionActiveMs: 1000,
       timingsProvided: true,
     });
     expect(flags).toContain("uniform_answers");
     expect(flags).toContain("very_fast_submission");
     expect(flags).not.toContain("activity_data_missing");
+    expect(flags).not.toContain("permission_page_below_500ms");
   });
 
-  it("only flags permission time when the page was shown", () => {
+  it("flags permission time below 500ms", () => {
     const flags = computeQualityFlags({
       answers,
       totalActiveMs: 20_000,
@@ -65,14 +66,16 @@ describe("quality flags", () => {
       timingsProvided: true,
     });
     expect(flags).toContain("permission_page_below_500ms");
+  });
 
-    const hidden = computeQualityFlags({
+  it("does not flag null legacy permission time", () => {
+    const flags = computeQualityFlags({
       answers,
       totalActiveMs: 20_000,
       permissionPageShown: false,
       permissionActiveMs: null,
       timingsProvided: true,
     });
-    expect(hidden).not.toContain("permission_page_below_500ms");
+    expect(flags).not.toContain("permission_page_below_500ms");
   });
 });

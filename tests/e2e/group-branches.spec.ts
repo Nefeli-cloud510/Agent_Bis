@@ -4,13 +4,14 @@ import {
   createPreviewSession,
   fillAndSubmit,
   pool,
+  sendTaskAndWaitForReply,
 } from "./helpers";
 
 type GroupExpectation = {
   remind: 0 | 1;
   scope: 1 | 2;
   goods: 1 | 2;
-  permissionText?: string;
+  permissionText: string;
   remindText: string;
   taskText: string;
   productCount: number;
@@ -62,6 +63,7 @@ const EXPECTATIONS: Record<number, GroupExpectation> = {
     remind: 0,
     scope: 1,
     goods: 1,
+    permissionText: "本次推荐，AI 只能看到【最近一次会话】内容，看不到更早记录。",
     remindText: "以下为您筛选了三款商品",
     taskText: "你要选购一台笔记本电脑，用于上课、写作业与数据分析，请查看智能体推荐结果。",
     productCount: 3,
@@ -71,6 +73,7 @@ const EXPECTATIONS: Record<number, GroupExpectation> = {
     remind: 0,
     scope: 1,
     goods: 2,
+    permissionText: "本次推荐，AI 只能看到【最近一次会话】内容，看不到更早记录。",
     remindText: "以下为您筛选了三款商品",
     taskText: "你要选购适配 14 英寸笔记本的电脑包，日常背着往返教室、图书馆。请查看智能体推荐结果。",
     productCount: 3,
@@ -80,6 +83,7 @@ const EXPECTATIONS: Record<number, GroupExpectation> = {
     remind: 0,
     scope: 2,
     goods: 1,
+    permissionText: "本次推荐，AI 可以看到上方【最近一次会话】+【更早的会话】全部内容。",
     remindText: "以下为您筛选了三款商品",
     taskText: "你要选购一台笔记本电脑，用于上课、写作业与数据分析，请查看智能体推荐结果。",
     productCount: 3,
@@ -89,6 +93,7 @@ const EXPECTATIONS: Record<number, GroupExpectation> = {
     remind: 0,
     scope: 2,
     goods: 2,
+    permissionText: "本次推荐，AI 可以看到上方【最近一次会话】+【更早的会话】全部内容。",
     remindText: "以下为您筛选了三款商品",
     taskText: "你要选购适配 14 英寸笔记本的电脑包，日常背着往返教室、图书馆。请查看智能体推荐结果。",
     productCount: 3,
@@ -116,22 +121,21 @@ test.describe("八组页面分支与材料", () => {
       ).toBeVisible();
       await page.getByRole("button", { name: "下一步", exact: true }).click();
 
-      if (expected.remind === 1) {
-        await expect(page).toHaveURL(/\/permission$/);
-        await expect(
-          page.getByText(expected.permissionText!, { exact: true })
-        ).toBeVisible();
-        await page.getByRole("button", { name: "下一步", exact: true }).click();
-      } else {
-        await expect(page).toHaveURL(/\/task$/);
-        await expect(page.getByText("AI 读取权限设置")).toHaveCount(0);
-      }
+      await expect(page).toHaveURL(/\/permission$/);
+      await expect(
+        page.getByRole("heading", { name: "AI 读取权限设置" })
+      ).toBeVisible();
+      await expect(
+        page.getByText(expected.permissionText, { exact: true })
+      ).toBeVisible();
+      await page.getByRole("button", { name: "下一步", exact: true }).click();
 
       await expect(page).toHaveURL(/\/task$/);
       await expect(page.getByText(expected.taskText, { exact: true })).toBeVisible();
       await page.getByRole("button", { name: "查看推荐" }).click();
 
       await expect(page).toHaveURL(/\/recommend$/);
+      await sendTaskAndWaitForReply(page);
       await expect(page.getByText(expected.remindText)).toBeVisible();
       await expect(page.locator(".product-card")).toHaveCount(3);
       await expect(page.getByText(expected.firstProduct, { exact: true })).toBeVisible();
@@ -150,7 +154,7 @@ test.describe("八组页面分支与材料", () => {
         remind: expected.remind,
         scope: expected.scope,
         goods: expected.goods,
-        permission_page_shown: expected.remind === 1,
+        permission_page_shown: true,
         collection_phase: "dev",
         q01: 3,
         q09: 3,

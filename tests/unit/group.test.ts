@@ -39,6 +39,6 @@ describe("eight group mapping", () => {
   });
 
   it("exposes the fixed material version", () => {
-    expect(MATERIAL_VERSION).toBe("flow-v1");
+    expect(MATERIAL_VERSION).toBe("flow-v3");
   });
 });

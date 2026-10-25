@@ -14,14 +14,19 @@ import {
   saveAnswers,
 } from "@/lib/study-events";
 
-const EMPTY_ANSWERS: Record<string, string> = {};
+const EMPTY_ANSWERS: Readonly<Record<string, string>> = Object.freeze({});
+const EMPTY_RECORD: Readonly<Record<string, string>> = EMPTY_ANSWERS;
 const answerListeners = new Set<() => void>();
 let cachedAnswers: Record<string, string> | null = null;
 
-function getAnswersSnapshot(): Record<string, string> {
+function getAnswersSnapshot(): Readonly<Record<string, string>> {
   if (typeof window === "undefined") return EMPTY_ANSWERS;
   if (!cachedAnswers) cachedAnswers = readAnswers();
   return cachedAnswers;
+}
+
+function getServerAnswersSnapshot(): Readonly<Record<string, string>> {
+  return EMPTY_RECORD;
 }
 
 function subscribeAnswers(listener: () => void): () => void {
@@ -38,7 +43,11 @@ function commitAnswers(next: Record<string, string>): void {
 }
 
 export default function QuestionnaireForm() {
-  const answers = useSyncExternalStore(subscribeAnswers, getAnswersSnapshot);
+  const answers = useSyncExternalStore(
+    subscribeAnswers,
+    getAnswersSnapshot,
+    getServerAnswersSnapshot
+  );
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

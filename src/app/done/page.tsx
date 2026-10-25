@@ -17,7 +17,7 @@ export default async function DonePage() {
 
   return (
     <StudyShell
-      steps={stepsForSession(session.remind)}
+      steps={stepsForSession()}
       activeStep="questionnaire"
       activePage="done"
       showExit={false}

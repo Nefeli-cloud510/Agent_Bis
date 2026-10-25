@@ -3,6 +3,7 @@ import {
   cleanupSessions,
   createPreviewSession,
   fillAndSubmit,
+  sendTaskAndWaitForReply,
 } from "./helpers";
 
 test.describe("手机端完整流程", () => {
@@ -13,7 +14,7 @@ test.describe("手机端完整流程", () => {
     await cleanupSessions(sessionIds.splice(0));
   });
 
-  test("375px 视口完成有提醒、电脑包组的全流程且不横向溢出", async ({
+  test("375px 视口完成电脑包组全流程且不横向溢出", async ({
     browser,
   }) => {
     const page = await browser.newPage({
@@ -48,6 +49,7 @@ test.describe("手机端完整流程", () => {
 
     await page.getByRole("button", { name: "查看推荐" }).click();
     await expect(page).toHaveURL(/\/recommend$/);
+    await sendTaskAndWaitForReply(page);
     await expect(page.locator(".product-card")).toHaveCount(3);
     const cards = await page.locator(".product-card").evaluateAll((nodes) =>
       nodes.map((node) => {

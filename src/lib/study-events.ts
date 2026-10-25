@@ -2,6 +2,8 @@ export const ACTIVITY_KEY = "ds_activity_v1";
 export const VISITS_KEY = "ds_page_visits_v1";
 export const ANSWERS_KEY = "ds_answers_v1";
 export const CONSENT_KEY = "ds_consent_key_v1";
+export const RECOMMENDATION_STATE_KEY = "ds_recommendation_state_v1";
+export const RECOMMENDATION_LOGS_KEY = "ds_recommendation_logs_v1";
 export const FLUSH_EVENT = "ds-study-flush";
 
 export type ActivityPage =
@@ -92,6 +94,58 @@ export function clearStudyStorage(): void {
     sessionStorage.removeItem(VISITS_KEY);
     sessionStorage.removeItem(ANSWERS_KEY);
     sessionStorage.removeItem(CONSENT_KEY);
+    sessionStorage.removeItem(RECOMMENDATION_STATE_KEY);
+    sessionStorage.removeItem(RECOMMENDATION_LOGS_KEY);
+  } catch {
+    // 清理失败不阻断流程
+  }
+}
+
+export type RecommendationLogEvent = {
+  event: "task_sent" | "assistant_reply_shown" | "questionnaire_started";
+  timestamp: string;
+};
+
+export type RecommendationState = {
+  taskSentAt?: string;
+  replyShownAt?: string;
+};
+
+export function readRecommendationState(): RecommendationState {
+  const stored = readStoredJson<RecommendationState>(
+    RECOMMENDATION_STATE_KEY,
+    {}
+  );
+  if (stored.taskSentAt || stored.replyShownAt) return stored;
+  // 兼容旧版把状态写入日志键的临时实现。
+  const legacy = readStoredJson<RecommendationState>(
+    RECOMMENDATION_LOGS_KEY,
+    {}
+  );
+  return legacy.taskSentAt || legacy.replyShownAt ? legacy : {};
+}
+
+export function saveRecommendationState(state: RecommendationState): void {
+  writeStoredJson(RECOMMENDATION_STATE_KEY, {
+    taskSentAt: state.taskSentAt,
+    replyShownAt: state.replyShownAt,
+  });
+}
+
+export function readRecommendationLogs(): RecommendationLogEvent[] {
+  return readStoredJson<RecommendationLogEvent[]>(RECOMMENDATION_LOGS_KEY, []);
+}
+
+export function saveRecommendationLogs(
+  logs: RecommendationLogEvent[]
+): void {
+  writeStoredJson(RECOMMENDATION_LOGS_KEY, logs.slice(-50));
+}
+
+export function clearRecommendationLogs(): void {
+  if (!isBrowser()) return;
+  try {
+    sessionStorage.removeItem(RECOMMENDATION_LOGS_KEY);
   } catch {
     // 清理失败不阻断流程
   }
@@ -135,7 +189,7 @@ export function buildStudyPayload(): StudyPayload {
   const timings: StudyPayload["timings"] = {
     consent_active_ms: 0,
     history_active_ms: 0,
-    permission_active_ms: null,
+    permission_active_ms: 0,
     task_active_ms: 0,
     recommendation_active_ms: 0,
     questionnaire_active_ms: 0,

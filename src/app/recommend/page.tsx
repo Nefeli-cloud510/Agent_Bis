@@ -1,5 +1,4 @@
-import { RECOMMENDATION_CONTENT } from "@/config/content";
-import AdvanceButton from "@/components/AdvanceButton";
+import RecommendationChat from "@/components/RecommendationChat";
 import StudyShell from "@/components/StudyShell";
 import {
   requireParticipantSession,
@@ -14,31 +13,14 @@ export default async function RecommendPage() {
   requireStep(session, "recommendation");
   const goods = session.goods as 1 | 2;
   const remind = session.remind as 0 | 1;
-  const content = RECOMMENDATION_CONTENT;
 
   return (
     <StudyShell
-      steps={stepsForSession(session.remind)}
+      steps={stepsForSession()}
       activeStep="recommendation"
       activePage="recommendation"
     >
-      <section className="agent-panel">
-        <p className="recommend-top">{content.remindText[remind]}</p>
-        <h1 className="agent-title">{content.goods[goods].title}</h1>
-        {content.goods[goods].items.map((item) => (
-          <article key={item.name} className="product-card">
-            <h2 className="product-name">{item.name}</h2>
-            <p className="product-desc">{item.description}</p>
-          </article>
-        ))}
-        <div className="consent-actions">
-          <AdvanceButton
-            api="/api/advance"
-            label={content.button}
-            fromStep="recommendation"
-          />
-        </div>
-      </section>
+      <RecommendationChat goods={goods} remind={remind} />
     </StudyShell>
   );
 }

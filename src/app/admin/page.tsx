@@ -73,6 +73,10 @@ export default async function AdminPage({
           <p className="admin-intro">
             所有数据来自服务器数据库；质量标记仅供提示，不会自动剔除或修改样本。
           </p>
+          <p className="admin-note">
+            当前材料版本为 {MATERIAL_VERSION}：八组统一经过权限告知页，scope
+            只控制该页内容，remind 只控制推荐回复中的提醒文案；推荐页使用固定对话式界面。旧版记录保留原样，统计前请按版本筛选。
+          </p>
         </div>
         <div className="admin-export-actions">
           <a

@@ -7,28 +7,17 @@ import {
   type SessionRow,
 } from "./session";
 
-export const CONSENT_STEP_LABELS = [
+export const STUDY_STEPS = [
   { id: "consent", label: "知情同意" },
   { id: "history", label: "历史记录" },
+  { id: "permission", label: "权限告知" },
   { id: "task", label: "购买任务" },
   { id: "recommendation", label: "推荐结果" },
   { id: "questionnaire", label: "问卷" },
 ] as const;
 
-export const PERMISSION_STEP_LABEL = {
-  id: "permission",
-  label: "权限告知",
-} as const;
-
-export function stepsForSession(remind: number) {
-  if (remind === 1) {
-    return [
-      ...CONSENT_STEP_LABELS.slice(0, 2),
-      PERMISSION_STEP_LABEL,
-      ...CONSENT_STEP_LABELS.slice(2),
-    ];
-  }
-  return CONSENT_STEP_LABELS;
+export function stepsForSession() {
+  return STUDY_STEPS;
 }
 
 export function pageForStep(step: PublicStep): string {

@@ -8,7 +8,7 @@
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
-| `id` | text PK | 材料版本号，当前 `flow-v1` |
+| `id` | text PK | 材料版本号，包含 `flow-v1` / `flow-v2` / `flow-v3` |
 | `description` | text | 版本说明 |
 | `released_at` | timestamptz | 入库时间 |
 
@@ -45,13 +45,15 @@
 | `remind` | 0=无提醒，1=有提醒 |
 | `scope` | 1=仅最近会话，2=全部会话 |
 | `goods` | 1=笔记本电脑，2=电脑包 |
-| `permission_page_shown` | `true`=提醒组显示权限页；无提醒组为 `false` |
-| `material_version` / `questionnaire_version` | flow-v1 / flow-15-v1 |
+| `permission_page_shown` | `true`=展示了权限告知页；`false`=未展示 |
+| `material_version` / `questionnaire_version` | flow-v3 / flow-15-v1（新提交）；旧版保留原版本号 |
 | `collection_phase` | dev、pilot、formal |
 | `submitted_at` | 服务端提交时间，ISO 8601 UTC |
 | `total_active_ms` | 各页面活动时间之和 |
 | `consent_active_ms` 等 | 页面可见且窗口聚焦的累计毫秒；隐藏或失焦暂停；属于过程摘要而非认真阅读时长 |
-| `permission_active_ms` | 无提醒组为 `null`，配合 `permission_page_shown=false`，区分“未出现”和“出现但 0 毫秒” |
+| `permission_active_ms` | flow-v2 / flow-v3 八组均正常记录；flow-v1 无提醒组为 `null`，配合 `permission_page_shown=false`，区分“未出现”和“出现但 0 毫秒” |
+
+`flow-v2` 与 `flow-v3` 新提交全部记录 `permission_page_shown=true`，数据库约束保证这两个版本的权限页展示状态不会误写成 `false`。`flow-v1` 既有记录不回填。
 | `page_visits` | JSON 数组，页面、进入/离开时间、活动毫秒；最多 300 条 |
 | `quality_flags` | JSON 数组，仅提示，不自动剔除 |
 | `q01`-`q15` | 整数 1-5，1=非常不同意，2=不同意，3=中立，4=同意，5=非常同意 |

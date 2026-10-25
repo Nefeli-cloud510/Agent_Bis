@@ -16,7 +16,7 @@ export default async function TaskPage() {
 
   return (
     <StudyShell
-      steps={stepsForSession(session.remind)}
+      steps={stepsForSession()}
       activeStep="task"
       activePage="task"
     >

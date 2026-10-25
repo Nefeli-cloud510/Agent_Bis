@@ -282,16 +282,17 @@ export function variableDictionaryRows() {
     {
       field: "permission_page_shown",
       type: "布尔",
-      encoding: "true=提醒组显示权限页；false=无提醒组",
+      encoding: "true=展示权限告知页；false=未展示权限告知页",
       missing: "提交必有",
-      note: "无提醒组恒为 false",
+      note:
+        "flow-v2 / flow-v3 八组均为 true；flow-v1 中 remind=0 的历史记录保留 false，不回填",
     },
     {
       field: "material_version / questionnaire_version",
       type: "文本版本号",
       encoding: `${MATERIAL_VERSION} / ${QUESTIONNAIRE_VERSION}`,
       missing: "提交必有",
-      note: "材料与问卷版本，历史记录按版本保留",
+      note: "材料与问卷版本；旧版记录保留原版本号，不随配置更新重新解释",
     },
     {
       field: "collection_phase",
@@ -311,7 +312,8 @@ export function variableDictionaryRows() {
       field: "*_active_ms",
       type: "整数毫秒",
       encoding: "页面可见且窗口聚焦时累计；隐藏标签页暂停",
-      missing: "permission_active_ms 在无提醒组为 NULL",
+      missing:
+        "flow-v1 中无提醒组 permission_active_ms 为 NULL；flow-v2 / flow-v3 八组正常记录",
       note: "不等于认真阅读时间",
     },
     {

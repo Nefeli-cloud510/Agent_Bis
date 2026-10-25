@@ -78,20 +78,25 @@ export async function advanceToQuestionnaire(page: Page): Promise<void> {
   await expect(page.getByRole("heading", { name: "与智能体历史聊天记录（模拟）" })).toBeVisible();
   await page.getByRole("button", { name: "下一步", exact: true }).click();
 
-  await expect(page).toHaveURL(/\/permission$|\/task$/);
-  if (new URL(page.url()).pathname === "/permission") {
-    await expect(page.getByRole("heading", { name: "AI 读取权限设置" })).toBeVisible();
-    await page.getByRole("button", { name: "下一步", exact: true }).click();
-  }
+  await expect(page).toHaveURL(/\/permission$/);
+  await expect(page.getByRole("heading", { name: "AI 读取权限设置" })).toBeVisible();
+  await page.getByRole("button", { name: "下一步", exact: true }).click();
 
   await expect(page).toHaveURL(/\/task$/);
   await expect(page.getByRole("heading", { name: "本次购物任务" })).toBeVisible();
   await page.getByRole("button", { name: "查看推荐" }).click();
 
   await expect(page).toHaveURL(/\/recommend$/);
+  await sendTaskAndWaitForReply(page);
   await page.getByRole("button", { name: "前往问卷填写" }).click();
   await expect(page).toHaveURL(/\/questionnaire$/);
   await expect(page.getByText("请根据刚才智能体推荐的感受作答")).toBeVisible();
+}
+
+export async function sendTaskAndWaitForReply(page: Page): Promise<void> {
+  await page.getByRole("button", { name: "发送", exact: true }).click();
+  await expect(page.getByText("正在整理推荐…")).toBeVisible();
+  await expect(page.getByText(/好的，我整理了三款/)).toBeVisible();
 }
 
 export async function fillAndSubmit(page: Page): Promise<void> {

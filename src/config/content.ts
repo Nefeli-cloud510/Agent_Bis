@@ -1,4 +1,4 @@
-export const MATERIAL_VERSION = "flow-v1";
+export const MATERIAL_VERSION = "flow-v3";
 export const QUESTIONNAIRE_VERSION = "flow-15-v1";
 
 export const GROUP_MAP: Record<
@@ -96,10 +96,20 @@ export const TASK_CONTENT: Record<1 | 2, { title: string; text: string; button: 
 };
 
 export const RECOMMENDATION_CONTENT = {
+  userMessage: {
+    1: "你要选购一台笔记本电脑，用于上课、写作业与数据分析，请查看智能体推荐结果。",
+    2: "你要选购适配 14 英寸笔记本的电脑包，日常背着往返教室、图书馆。请查看智能体推荐结果。",
+  },
+  assistantOpening: {
+    1: "好的，我整理了三款笔记本电脑供你比较。下面列出了它们的重量、续航和配置，你可以查看后决定是否采纳推荐。",
+    2: "好的，我整理了三款电脑包供你比较。下面列出了它们的主要特点，你可以查看后决定是否采纳推荐。",
+  },
   remindText: {
     0: "以下为您筛选了三款商品，您可以查看商品信息后决定是否采纳。",
     1: "本次筛选参考了你聊天中的展示使用习惯与偏好，您可以查看商品信息后决定是否采纳。",
   },
+  typing: "正在整理推荐…",
+  sendButton: "发送",
   goods: {
     1: {
       title: "笔记本电脑",
@@ -145,7 +155,7 @@ export const QUESTIONNAIRE_CONTENT = {
   ],
   sections: [
     {
-      heading: null,
+      heading: "使用体验",
       questions: [
         { id: "q01", text: "1. 我相信本次 AI 给出的商品推荐是可靠的" },
         { id: "q02", text: "2. 我认为本次 AI 推荐没有误导我" },
@@ -157,7 +167,7 @@ export const QUESTIONNAIRE_CONTENT = {
       ],
     },
     {
-      heading: "操纵检查",
+      heading: "体验回顾",
       questions: [
         { id: "q08", text: "8.智能体推荐提示了参考你之前的聊天习惯" },
         { id: "q09", text: "9. 根据权限页面说明，系统能读取全部历史" },
@@ -168,7 +178,7 @@ export const QUESTIONNAIRE_CONTENT = {
       ],
     },
     {
-      heading: "控制变量",
+      heading: "日常使用",
       questions: [
         { id: "q14", text: "14. 你对笔记本电脑 / 电脑包很熟悉" },
         { id: "q15", text: "15. 你平时使用 AI 助手的频率很高" },

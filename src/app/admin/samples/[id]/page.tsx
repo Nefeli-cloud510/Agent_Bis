@@ -55,7 +55,7 @@ export default async function SampleDetailPage({
           />
           <DetailItem
             label="权限告知页"
-            value={permissionShown ? "已显示" : "未显示（无提醒组）"}
+            value={permissionShown ? "已显示" : "未显示（flow-v1 历史记录）"}
           />
           <DetailItem
             label="收集阶段"
@@ -142,7 +142,11 @@ export default async function SampleDetailPage({
           />
           <DetailItem
             label="权限告知"
-            value={permissionShown ? formatMs(sample.permission_active_ms) : "页面未出现（null）"}
+            value={
+              permissionShown
+                ? formatMs(sample.permission_active_ms)
+                : "页面未出现（flow-v1 / null）"
+            }
           />
           <DetailItem label="购买任务" value={formatMs(sample.task_active_ms)} />
           <DetailItem

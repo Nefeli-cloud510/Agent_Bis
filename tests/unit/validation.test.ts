@@ -17,7 +17,7 @@ function validBody(overrides: Record<string, unknown> = {}) {
     timings: {
       consent_active_ms: 3000,
       history_active_ms: 2000,
-      permission_active_ms: null,
+      permission_active_ms: 2000,
       task_active_ms: 1000,
       recommendation_active_ms: 2000,
       questionnaire_active_ms: 4000,

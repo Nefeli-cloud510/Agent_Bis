@@ -42,7 +42,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, nextUrl: PUBLIC_PAGES.done });
   }
 
-  const expectedNext = nextStepAfter(fromStep, session.remind);
+  const expectedNext = nextStepAfter(fromStep);
   if (session.current_step === fromStep) {
     await updateSessionStep(session.id, expectedNext);
     return NextResponse.json({ ok: true, nextUrl: pageForStep(expectedNext) });

@@ -71,7 +71,29 @@ describe("flow document content", () => {
     expect(RECOMMENDATION_CONTENT.button).toBe("前往问卷填写");
   });
 
+  it("keeps the conversational task and assistant opening texts", () => {
+    expect(RECOMMENDATION_CONTENT.userMessage[1]).toBe(
+      "你要选购一台笔记本电脑，用于上课、写作业与数据分析，请查看智能体推荐结果。"
+    );
+    expect(RECOMMENDATION_CONTENT.userMessage[2]).toBe(
+      "你要选购适配 14 英寸笔记本的电脑包，日常背着往返教室、图书馆。请查看智能体推荐结果。"
+    );
+    expect(RECOMMENDATION_CONTENT.assistantOpening[1]).toBe(
+      "好的，我整理了三款笔记本电脑供你比较。下面列出了它们的重量、续航和配置，你可以查看后决定是否采纳推荐。"
+    );
+    expect(RECOMMENDATION_CONTENT.assistantOpening[2]).toBe(
+      "好的，我整理了三款电脑包供你比较。下面列出了它们的主要特点，你可以查看后决定是否采纳推荐。"
+    );
+    expect(RECOMMENDATION_CONTENT.typing).toBe("正在整理推荐…");
+    expect(RECOMMENDATION_CONTENT.sendButton).toBe("发送");
+  });
+
   it("keeps the 15 questionnaire items and 5-point labels verbatim", () => {
+    expect(QUESTIONNAIRE_CONTENT.sections.map((section) => section.heading)).toEqual([
+      "使用体验",
+      "体验回顾",
+      "日常使用",
+    ]);
     const questions: Array<{ id: string; text: string }> = [];
     for (const section of QUESTIONNAIRE_CONTENT.sections) {
       for (const question of section.questions) {

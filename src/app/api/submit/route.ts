@@ -70,7 +70,8 @@ export async function POST(request: Request) {
   }
   const body = validation.data;
 
-  const permissionPageShown = session.remind === 1;
+  // flow-v2 起八组统一经过权限告知页。
+  const permissionPageShown = true;
   const submissionTimings = computeSubmissionFields(
     body.timings,
     permissionPageShown
