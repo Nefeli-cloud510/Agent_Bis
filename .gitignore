@@ -43,6 +43,9 @@ test-results/
 backups/
 *.log
 
+# scratch files
+/work/
+
 # vercel
 .vercel
 

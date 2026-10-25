@@ -1,0 +1,1509 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>购物体验研究（静态界面演示）</title>
+  <style>
+    :root {
+      --bg: #f4f7f5;
+      --bg-strong: #eaf0ec;
+      --surface: #ffffff;
+      --ink: #192622;
+      --ink-soft: #55645d;
+      --line: #dbe3dd;
+      --primary: #0e6e63;
+      --primary-strong: #0a5b52;
+      --primary-soft: #dcefea;
+      --accent: #c8790a;
+      --accent-soft: #f6ead3;
+      --danger: #b3402f;
+      --shadow: 0 1px 2px rgb(23 38 33 / 0.05), 0 14px 40px -26px rgb(23 38 33 / 0.28);
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      font-family: ui-sans-serif, system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB",
+        "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      letter-spacing: 0;
+    }
+
+    button {
+      font: inherit;
+      letter-spacing: 0;
+    }
+
+    .study-header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 58px;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--line);
+      background: rgb(255 255 255 / 0.92);
+      backdrop-filter: blur(10px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(145deg, var(--primary), var(--primary-strong));
+      color: #fff;
+      box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.16), 0 6px 16px -10px rgb(14 110 99 / 0.8);
+      flex: 0 0 auto;
+    }
+
+    .brand-mark svg { display: block; }
+    .brand-caption { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+    .demo-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 16px;
+      border-bottom: 1px solid #ead9b8;
+      background: #fdf6e3;
+      color: #715324;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .demo-top-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 10px;
+      border: 1px solid #dfc187;
+      border-radius: 8px;
+      background: #fff8e7;
+      color: #715324;
+      font-size: 12.5px;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 8px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--ink-soft);
+      font-size: 14px;
+      font-weight: 550;
+      cursor: pointer;
+      transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+    }
+
+    .btn:hover {
+      border-color: #b8c7bf;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 50px;
+      padding: 10px 22px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 650;
+      cursor: pointer;
+      box-shadow: 0 10px 22px -18px rgb(14 110 99 / 0.9);
+      transition: background 0.15s ease, transform 0.15s ease;
+    }
+
+    .btn-primary:hover:not(:disabled) { background: var(--primary-strong); }
+    .btn-primary:active:not(:disabled) { transform: translateY(1px); }
+    .btn-primary:disabled { opacity: 0.62; cursor: not-allowed; }
+
+    .study-main {
+      width: 100%;
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 22px 16px 56px;
+    }
+
+    .study-main.narrow { max-width: 720px; }
+
+    .study-footer {
+      padding: 20px 16px 28px;
+      border-top: 1px solid var(--line);
+      background: var(--bg-strong);
+      color: var(--ink-soft);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .progress {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      margin: 0 0 20px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgb(255 255 255 / 0.72);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .progress::-webkit-scrollbar { display: none; }
+
+    .progress-step {
+      display: flex;
+      flex: 1 0 auto;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      min-width: 46px;
+      color: var(--ink-soft);
+      font-size: 12px;
+    }
+
+    .progress-step .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #c6d1cb;
+    }
+
+    .progress-step.active .dot {
+      width: 13px;
+      height: 13px;
+      box-shadow: 0 0 0 4px var(--primary-soft);
+      background: var(--primary);
+    }
+
+    .progress-step.done .dot { background: var(--primary); }
+    .progress-step.active { color: var(--ink); font-weight: 600; }
+
+    .agent-panel {
+      border: 1px solid var(--line);
+      border-top: 3px solid var(--primary);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: clamp(18px, 4vw, 32px);
+    }
+
+    .permission-panel { border-top-color: var(--accent); }
+
+    .agent-title {
+      margin: 0 0 16px;
+      font-size: 24px;
+      font-weight: 750;
+      line-height: 1.3;
+      letter-spacing: 0;
+    }
+
+    @media (min-width: 640px) {
+      .agent-title { font-size: 28px; }
+    }
+
+    .agent-text {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 15.5px;
+      line-height: 1.85;
+      white-space: pre-wrap;
+    }
+
+    .agent-text + .agent-text { margin-top: 10px; }
+
+    .agent-subtitle {
+      margin: 18px 0 10px;
+      padding-left: 10px;
+      border-left: 3px solid var(--accent);
+      color: var(--ink);
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .agent-subtitle:first-child { margin-top: 0; }
+    .consent-actions { margin-top: 24px; }
+    .consent-actions .btn-primary { width: 100%; }
+
+    .message-bubble {
+      position: relative;
+      margin: 8px 0;
+      padding: 11px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px 8px 8px 3px;
+      background: #fafcfb;
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    .history-note { margin-top: 14px; color: var(--ink-soft); font-size: 13.5px; }
+
+    .form-error {
+      margin: 12px 0 0;
+      padding: 11px 13px;
+      border: 1px solid #e8c6bd;
+      border-radius: 8px;
+      background: #fdf1ee;
+      color: var(--danger);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .question-fieldset {
+      margin: 0;
+      padding: 16px 0;
+      border: 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .question-fieldset:first-child { border-top: 0; padding-top: 8px; }
+
+    .question-legend {
+      width: 100%;
+      margin: 0 0 12px;
+      font-size: 15.5px;
+      font-weight: 600;
+      line-height: 1.65;
+      color: var(--ink);
+    }
+
+    .question-missing { color: var(--danger); }
+
+    .scale-row {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 7px;
+    }
+
+    .scale-option {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      min-height: 62px;
+      padding: 7px 3px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfdfc;
+      color: var(--ink-soft);
+      font-size: 13px;
+      cursor: pointer;
+      user-select: none;
+      text-align: center;
+    }
+
+    .scale-option span:first-child {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1;
+    }
+
+    .scale-option small { font-size: 11.5px; line-height: 1.25; }
+
+    .scale-option input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      margin: 0;
+    }
+
+    .scale-option:has(input:checked) {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+      box-shadow: 0 0 0 3px rgb(14 110 99 / 0.12);
+    }
+
+    .scale-option:has(input:focus-visible) {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    .submit-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 22px;
+    }
+
+    .chat-panel {
+      border: 1px solid var(--line);
+      border-top: 3px solid var(--primary);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .chat-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfdfc;
+    }
+
+    .chat-head strong, .chat-head span { display: block; line-height: 1.35; }
+    .chat-head strong { font-size: 15px; }
+    .chat-head span { color: var(--ink-soft); font-size: 12.5px; }
+
+    .chat-avatar {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: linear-gradient(145deg, var(--primary), var(--primary-strong));
+      color: #fff;
+      flex: 0 0 auto;
+    }
+
+    .chat-avatar svg { display: block; }
+
+    .chat-messages {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 200px;
+      padding: 16px;
+      background: #f7faf8;
+    }
+
+    .chat-row { display: flex; width: 100%; }
+    .chat-row-user { justify-content: flex-end; }
+    .chat-row-assistant { justify-content: flex-start; }
+
+    .chat-bubble {
+      max-width: 92%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 15px;
+      line-height: 1.75;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .chat-bubble-user {
+      border: 1px solid #bfd8d1;
+      border-top-right-radius: 3px;
+      background: var(--primary-soft);
+      color: #163f38;
+    }
+
+    .chat-bubble-assistant {
+      border: 1px solid var(--line);
+      border-top-left-radius: 3px;
+      background: #ffffff;
+      color: var(--ink);
+      width: min(680px, 100%);
+    }
+
+    .chat-bubble-assistant > p { margin: 0; }
+    .chat-remind { margin-top: 8px !important; color: var(--ink-soft); }
+
+    .chat-product-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .product-card {
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--primary-soft);
+      border-radius: 8px;
+      background: #fbfdfc;
+      padding: 15px 16px;
+      height: 100%;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .product-name {
+      margin: 0 0 8px;
+      font-size: 16.5px;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .product-desc {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 14.5px;
+      line-height: 1.85;
+    }
+
+    @media (hover: hover) {
+      .product-card:hover {
+        border-left-color: var(--primary);
+        box-shadow: 0 10px 28px -24px rgb(14 110 99 / 0.45);
+      }
+    }
+
+    .chat-actions { margin-top: 16px; }
+    .chat-actions .btn-primary { width: 100%; }
+
+    .chat-typing {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--ink-soft);
+      font-size: 14px;
+    }
+
+    .typing-dots {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .typing-dots i {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--primary);
+      animation: typing-pulse 1.1s ease-in-out infinite;
+    }
+
+    .typing-dots i:nth-child(2) { animation-delay: 0.15s; }
+    .typing-dots i:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes typing-pulse {
+      0%, 60%, 100% { opacity: 0.35; transform: translateY(0); }
+      30% { opacity: 1; transform: translateY(-2px); }
+    }
+
+    .chat-composer {
+      padding: 12px 14px 14px;
+      border-top: 1px solid var(--line);
+      background: #ffffff;
+    }
+
+    .chat-input-wrap {
+      display: flex;
+      align-items: stretch;
+      gap: 8px;
+    }
+
+    .chat-input {
+      flex: 1;
+      min-width: 0;
+      min-height: 46px;
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfdfc;
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.5;
+      cursor: default;
+    }
+
+    .chat-send {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-width: 84px;
+      min-height: 46px;
+      padding: 0 14px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 650;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .chat-send:hover { background: var(--primary-strong); }
+    .chat-hint { margin: 8px 2px 0; color: var(--ink-soft); font-size: 12.5px; }
+
+    @media (min-width: 720px) {
+      .chat-product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .chat-messages { padding: 20px; }
+    }
+
+    .done-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .done-icon {
+      margin: 4px auto 14px;
+      color: var(--primary);
+      width: 44px;
+      height: 44px;
+    }
+
+    .demo-note {
+      margin: 18px 0 0;
+      padding: 12px 14px;
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      background: #fdf8ee;
+      color: #71582f;
+      font-size: 13px;
+      line-height: 1.75;
+      text-align: left;
+    }
+
+    .entry-wrap { max-width: 980px; }
+
+    .entry-hero {
+      border: 1px solid var(--line);
+      border-top: 3px solid var(--primary);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: clamp(20px, 4vw, 32px);
+      margin-bottom: 18px;
+    }
+
+    .entry-title {
+      margin: 0 0 10px;
+      font-size: clamp(22px, 4vw, 30px);
+      font-weight: 760;
+      line-height: 1.35;
+      letter-spacing: 0;
+    }
+
+    .entry-intro {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 15px;
+      line-height: 1.85;
+    }
+
+    .entry-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .entry-tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 3px 10px;
+      border: 1px solid #bfd8d1;
+      border-radius: 8px;
+      background: #eef8f4;
+      color: #2c5c52;
+      font-size: 12.5px;
+      font-weight: 600;
+    }
+
+    .entry-section-title {
+      margin: 0 0 10px;
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .entry-sub {
+      margin: 0 0 14px;
+      color: var(--ink-soft);
+      font-size: 13.5px;
+      line-height: 1.7;
+    }
+
+    .group-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 12px;
+    }
+
+    .group-card {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      text-decoration: none;
+      color: var(--ink);
+      box-shadow: 0 1px 2px rgb(23 38 33 / 0.04);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+    }
+
+    .group-card:hover {
+      border-color: #9fc8bd;
+      box-shadow: 0 12px 30px -24px rgb(14 110 99 / 0.5);
+      transform: translateY(-1px);
+    }
+
+    .group-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .group-card-name { font-size: 17px; font-weight: 750; }
+
+    .group-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 34px;
+      min-height: 26px;
+      padding: 2px 8px;
+      border-radius: 8px;
+      background: var(--primary-soft);
+      color: var(--primary-strong);
+      font-size: 12.5px;
+      font-weight: 700;
+    }
+
+    .group-param-list {
+      display: grid;
+      gap: 6px;
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 13.5px;
+      line-height: 1.55;
+    }
+
+    .group-param-list b { color: var(--ink); font-weight: 650; }
+
+    .group-card-cta {
+      margin-top: 4px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--line);
+      color: var(--primary);
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    .entry-foot {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 18px;
+      padding: 14px 16px;
+      border: 1px dashed #c8d4cc;
+      border-radius: 8px;
+      background: #fbfdfc;
+      color: var(--ink-soft);
+      font-size: 13.5px;
+      line-height: 1.75;
+    }
+
+    .clear-link {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      color: var(--primary);
+      font-size: 13.5px;
+      font-weight: 650;
+      text-decoration: none;
+      cursor: pointer;
+      background: none;
+      border: 0;
+      padding: 4px;
+    }
+
+    @media (max-width: 640px) {
+      .progress { gap: 3px; padding: 10px 8px; }
+      .progress-step { min-width: 40px; font-size: 11px; }
+      .scale-option small { font-size: 10.5px; }
+      .chat-input-wrap { flex-direction: column; }
+      .chat-send { width: 100%; }
+      .header-actions .btn { padding: 8px 10px; }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .agent-panel,
+      .product-card {
+        animation: rise-in 0.28s ease both;
+      }
+    }
+
+    @keyframes rise-in {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <header class="study-header">
+    <a class="brand" href="#/select" title="回到八组选择">
+      <span class="brand-mark" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 8V4H8"></path><rect width="16" height="12" x="4" y="8" rx="2"></rect>
+          <path d="M2 14h2"></path><path d="M20 14h2"></path><path d="M15 13v2"></path><path d="M9 13v2"></path>
+        </svg>
+      </span>
+      <span class="brand-caption">购物体验研究</span>
+    </a>
+    <div class="header-actions" id="header-actions"></div>
+  </header>
+
+  <div id="demo-top"></div>
+
+  <main class="study-main" id="main"></main>
+
+  <footer class="study-footer">购物体验研究</footer>
+
+  <script>
+    "use strict";
+
+    const CONTENT = {
+      consent: {
+        title: "实验知情同意书",
+        paragraphs: [
+          "您好！我们正在进行一项关于购物智能体商品推荐的学术实验，全程大约 3-5 分钟。",
+          "1. 本实验仅用于课程学术研究，所有数据匿名收集，不会泄露你的个人信息；",
+          "2. 你可以随时退出实验，退出后你的数据不会被记录；",
+          "3. 完成全部问卷即视为同意参与本次实验。"
+        ],
+        button: "我已阅读并同意，开始实验"
+      },
+      history: {
+        title: "与智能体历史聊天记录（模拟）",
+        sections: [
+          {
+            heading: "【三天内的会话】",
+            messages: [
+              "现在地铁站好多高饱和广告，看着就心烦。",
+              "最近天天往图书馆、机房跑，包里塞一堆东西，肩膀好酸，怎么缓解酸痛呢？",
+              "这个月花太多钱在吃饭上了，生活费有些不够用。"
+            ]
+          },
+          {
+            heading: "【三个月内的会话（系统可以读取）】",
+            messages: [
+              "有没有低调简单、日常好搭的衣服呀，不要那种印花很多很花哨的。",
+              "包要怎么搭衣服看起来更协调呢？",
+              "信管专业入门有什么值得看的书吗，比如数据库或者c语言相关的。",
+              "我平时基本不打游戏，空闲时候就喜欢看看剧。"
+            ]
+          }
+        ],
+        note: "备注：以上对话纯属虚构。",
+        button: "下一步"
+      },
+      permission: {
+        title: "AI 读取权限设置",
+        1: "本次推荐，AI 只能看到【最近一次会话】内容，看不到更早记录。",
+        2: "本次推荐，AI 可以看到上方【最近一次会话】+【更早的会话】全部内容。",
+        button: "下一步"
+      },
+      task: {
+        1: {
+          title: "本次购物任务",
+          text: "你要选购一台笔记本电脑，用于上课、写作业与数据分析，请查看智能体推荐结果。",
+          button: "查看推荐"
+        },
+        2: {
+          title: "本次购物任务",
+          text: "你要选购适配 14 英寸笔记本的电脑包，日常背着往返教室、图书馆。请查看智能体推荐结果。",
+          button: "查看推荐"
+        }
+      },
+      recommend: {
+        opening: {
+          1: "好的，我整理了三款笔记本电脑供你比较。下面列出了它们的重量、续航和配置，你可以查看后决定是否采纳推荐。",
+          2: "好的，我整理了三款电脑包供你比较。下面列出了它们的主要特点，你可以查看后决定是否采纳推荐。"
+        },
+        remind: {
+          0: "以下为您筛选了三款商品，您可以查看商品信息后决定是否采纳。",
+          1: "本次筛选参考了你聊天中的展示使用习惯与偏好，您可以查看商品信息后决定是否采纳。"
+        },
+        typing: "正在整理推荐…",
+        send: "发送",
+        goods: {
+          1: {
+            title: "笔记本电脑",
+            items: [
+              {
+                name: "名称：笔记本 A",
+                description: "描述：14 英寸；机身 1.3kg；76Wh 电池，连续视频 8h、重度算力 4h；双通道 16G 内存 + 512G 固态；CPU 多核 4.6GHz；色域 100% sRGB；PD 快充 65W；接口含 HDMI+USB-A×2；价格适中。"
+              },
+              {
+                name: "名称：笔记本 B",
+                description: "描述：16 英寸；机身 2.1kg；90Wh 电池，连续视频 10h、重度算力 5h；32G 内存 + 1T 固态；CPU 多核 5.2GHz；高刷 144Hz；RGB 背光键盘；价格偏高。"
+              },
+              {
+                name: "名称：笔记本 C",
+                description: "描述：13.3 英寸；机身 1.1kg；60Wh 电池，连续视频 7h、重度算力 3.5h；8G 内存 + 256G 固态；CPU 多核 4.2GHz；基础 45W 充电；无多余拓展接口；性价比高。"
+              }
+            ]
+          },
+          2: {
+            title: "电脑包",
+            items: [
+              { name: "名称：电脑包 A", description: "描述：轻薄简约，基础防震，背着舒服，价格适中。" },
+              { name: "名称：电脑包 B", description: "描述：容量大、防摔加厚，双肩款，价格偏高。" },
+              { name: "名称：电脑包 C", description: "描述：很轻、简单基础款，性价比很高。" }
+            ]
+          }
+        },
+        button: "前往问卷填写"
+      },
+      questionnaire: {
+        instruction: "请根据刚才智能体推荐的感受作答，1 = 非常不同意，2 = 不同意，3 = 中立，4 = 同意，5 = 非常同意",
+        scale: [
+          { value: "1", label: "非常不同意" },
+          { value: "2", label: "不同意" },
+          { value: "3", label: "中立" },
+          { value: "4", label: "同意" },
+          { value: "5", label: "非常同意" }
+        ],
+        sections: [
+          {
+            heading: "使用体验",
+            questions: [
+              { id: "q01", text: "1. 我相信本次 AI 给出的商品推荐是可靠的" },
+              { id: "q02", text: "2. 我认为本次 AI 推荐没有误导我" },
+              { id: "q03", text: "3. 我会考虑购买本次 AI 推荐的商品" },
+              { id: "q04", text: "4. 如果现实里有需求，我大概率会采纳这次的推荐" },
+              { id: "q05", text: "5. 本次推荐充分考虑了我的使用需求" },
+              { id: "q06", text: "6. AI 调取聊天历史做推荐，会带来隐私泄露风险" },
+              { id: "q07", text: "7. 使用我的聊天历史来推荐商品，让我感到不安" }
+            ]
+          },
+          {
+            heading: "体验回顾",
+            questions: [
+              { id: "q08", text: "8.智能体推荐提示了参考你之前的聊天习惯" },
+              { id: "q09", text: "9. 根据权限页面说明，系统能读取全部历史" },
+              { id: "q10", text: "10. 刚刚看到的商品信息很复杂，需要对比很多参数" },
+              { id: "q11", text: "11. 刚才的模拟聊天记录，和这次选购商品的任务是相关的" },
+              { id: "q12", text: "12. 参考聊天记录，对我挑选这个商品有帮助" },
+              { id: "q13", text: "13. 这次购买该商品对我个人的很重要" }
+            ]
+          },
+          {
+            heading: "日常使用",
+            questions: [
+              { id: "q14", text: "14. 你对笔记本电脑 / 电脑包很熟悉" },
+              { id: "q15", text: "15. 你平时使用 AI 助手的频率很高" }
+            ]
+          }
+        ],
+        submit: "提交"
+      },
+      end: {
+        title: "感谢你完成本次实验！",
+        text: "本次实验到此结束。"
+      },
+      exit: {
+        title: "已退出实验",
+        text: "未提交的数据不会被记录。你可以随时关闭本页面。"
+      }
+    };
+
+    const GROUPS = [
+      { id: 1, remind: 1, scope: 1, goods: 1 },
+      { id: 2, remind: 1, scope: 1, goods: 2 },
+      { id: 3, remind: 1, scope: 2, goods: 1 },
+      { id: 4, remind: 1, scope: 2, goods: 2 },
+      { id: 5, remind: 0, scope: 1, goods: 1 },
+      { id: 6, remind: 0, scope: 1, goods: 2 },
+      { id: 7, remind: 0, scope: 2, goods: 1 },
+      { id: 8, remind: 0, scope: 2, goods: 2 }
+    ];
+
+    const STEP_META = [
+      { id: "consent", label: "知情同意" },
+      { id: "history", label: "历史记录" },
+      { id: "permission", label: "权限告知" },
+      { id: "task", label: "购买任务" },
+      { id: "recommendation", label: "推荐结果" },
+      { id: "questionnaire", label: "问卷" }
+    ];
+
+    const GROUP_KEY = "agent-demo-group";
+    const ANSWERS_KEY = "agent-demo-answers";
+    const CHAT_KEY = "agent-demo-chat";
+    const DONE_KEY = "agent-demo-done";
+
+    function storageAvailable() {
+      try {
+        window.localStorage.setItem("__probe__", "1");
+        window.localStorage.removeItem("__probe__");
+        return true;
+      } catch (err) {
+        return false;
+      }
+    }
+    const hasStorage = storageAvailable();
+
+    function saveTo(key, value) {
+      if (!hasStorage) return;
+      try {
+        window.localStorage.setItem(key, JSON.stringify(value));
+      } catch (err) {
+        /* 存储不可用时本次演示仍可继续 */
+      }
+    }
+
+    function loadFrom(key, fallback) {
+      if (!hasStorage) return fallback;
+      try {
+        const raw = window.localStorage.getItem(key);
+        return raw === null ? fallback : JSON.parse(raw);
+      } catch (err) {
+        return fallback;
+      }
+    }
+
+    function clearKey(key) {
+      if (!hasStorage) return;
+      try {
+        window.localStorage.removeItem(key);
+      } catch (err) {
+        /* ignore */
+      }
+    }
+
+    function getGroup() {
+      const id = loadFrom(GROUP_KEY, null);
+      return GROUPS.find((g) => g.id === id) || null;
+    }
+
+    function getAnswers() {
+      return loadFrom(ANSWERS_KEY, {});
+    }
+
+    function saveAnswers(answers) {
+      saveTo(ANSWERS_KEY, answers);
+    }
+
+    function getChatState() {
+      const state = loadFrom(CHAT_KEY, { step: "input" });
+      return state && typeof state === "object" ? state : { step: "input" };
+    }
+
+    function saveChatState(state) {
+      saveTo(CHAT_KEY, state);
+    }
+
+    function isDone() {
+      return loadFrom(DONE_KEY, false) === true;
+    }
+
+    function setDone(value) {
+      saveTo(DONE_KEY, Boolean(value));
+    }
+
+    function clearParticipantState() {
+      clearKey(ANSWERS_KEY);
+      clearKey(CHAT_KEY);
+      clearKey(DONE_KEY);
+    }
+
+    function getRoute() {
+      const raw = window.location.hash.replace(/^#\/?/, "");
+      return raw || "start";
+    }
+
+    function go(step) {
+      window.location.hash = "#/" + step;
+    }
+
+    function esc(text) {
+      return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function renderHeader(step) {
+      const box = document.getElementById("header-actions");
+      const showExit = ["consent", "history", "permission", "task", "recommendation", "questionnaire"].includes(step);
+      if (!showExit) {
+        box.innerHTML = "";
+        return;
+      }
+      box.innerHTML = '<button type="button" class="btn" id="exit-button">退出实验</button>';
+      document.getElementById("exit-button").addEventListener("click", () => {
+        clearParticipantState();
+        go("exited");
+      });
+    }
+
+    function renderDemoTop(step) {
+      const box = document.getElementById("demo-top");
+      const participantStep =
+        ["consent", "history", "permission", "task", "recommendation", "questionnaire", "done", "exited"].includes(step);
+      if (!participantStep) {
+        box.innerHTML = "";
+        return;
+      }
+      const words =
+        step === "done" || step === "exited"
+          ? "本页为静态界面演示，不写入研究数据"
+          : "演示预览版：可随时返回入口切换八组";
+      box.innerHTML =
+        '<div class="demo-top"><span>' + esc(words) + "</span>" +
+        '<a class="demo-top-cta" href="#/select">选择其他组</a></div>';
+    }
+
+    function progressHtml(activeStep) {
+      const activeIndex = STEP_META.findIndex((step) => step.id === activeStep);
+      const doneIndex = activeIndex < 0 ? STEP_META.length - 1 : activeIndex;
+      return (
+        '<nav class="progress" aria-label="实验进度">' +
+        STEP_META.map((step, index) => {
+          const cls = index < doneIndex ? "done" : index === doneIndex ? "active" : "";
+          return (
+            '<div class="progress-step ' + cls + '"' +
+            (index === doneIndex ? ' aria-current="step"' : "") + ">" +
+            '<span class="dot" aria-hidden="true"></span><span>' + esc(step.label) + "</span>" +
+            "</div>"
+          );
+        }).join("") +
+        "</nav>"
+      );
+    }
+
+    function renderStart(step) {
+      const main = document.getElementById("main");
+      main.className = "study-main narrow";
+      main.innerHTML =
+        progressHtml("consent") +
+        '<section class="agent-panel">' +
+        "<h1 class=\"agent-title\">" + esc(CONTENT.consent.title) + "</h1>" +
+        CONTENT.consent.paragraphs.map((p) => '<p class="agent-text">' + esc(p) + "</p>").join("") +
+        '<div class="consent-actions">' +
+        '<button type="button" class="btn-primary" id="consent-button">' + esc(CONTENT.consent.button) + "</button>" +
+        "</div></section>";
+      document.getElementById("consent-button").addEventListener("click", () => {
+        if (!getGroup()) {
+          go("select");
+          return;
+        }
+        go("history");
+      });
+    }
+
+    function renderHistory(step) {
+      const main = document.getElementById("main");
+      main.className = "study-main";
+      main.innerHTML =
+        progressHtml("history") +
+        '<section class="agent-panel">' +
+        "<h1 class=\"agent-title\">" + esc(CONTENT.history.title) + "</h1>" +
+        CONTENT.history.sections.map(
+          (section) =>
+            '<div><h2 class="agent-subtitle">' + esc(section.heading) + "</h2>" +
+            section.messages.map((m) => '<p class="message-bubble">' + esc(m) + "</p>").join("") +
+            "</div>"
+        ).join("") +
+        '<p class="history-note">' + esc(CONTENT.history.note) + "</p>" +
+        '<div class="consent-actions">' +
+        '<button type="button" class="btn-primary" id="history-button">' + esc(CONTENT.history.button) + "</button>" +
+        "</div></section>";
+      document.getElementById("history-button").addEventListener("click", () => go("permission"));
+    }
+
+    function renderPermission(step) {
+      const group = getGroup();
+      if (!group) {
+        go("select");
+        return;
+      }
+      const main = document.getElementById("main");
+      main.className = "study-main narrow";
+      main.innerHTML =
+        progressHtml("permission") +
+        '<section class="agent-panel permission-panel">' +
+        "<h1 class=\"agent-title\">" + esc(CONTENT.permission.title) + "</h1>" +
+        '<p class="agent-text">' + esc(CONTENT.permission[group.scope]) + "</p>" +
+        '<div class="consent-actions">' +
+        '<button type="button" class="btn-primary" id="permission-button">' + esc(CONTENT.permission.button) + "</button>" +
+        "</div></section>";
+      document.getElementById("permission-button").addEventListener("click", () => go("task"));
+    }
+
+    function renderTask(step) {
+      const group = getGroup();
+      if (!group) {
+        go("select");
+        return;
+      }
+      const task = CONTENT.task[group.goods];
+      const main = document.getElementById("main");
+      main.className = "study-main narrow";
+      main.innerHTML =
+        progressHtml("task") +
+        '<section class="agent-panel">' +
+        "<h1 class=\"agent-title\">" + esc(task.title) + "</h1>" +
+        '<p class="agent-text">' + esc(task.text) + "</p>" +
+        '<div class="consent-actions">' +
+        '<button type="button" class="btn-primary" id="task-button">' + esc(task.button) + "</button>" +
+        "</div></section>";
+      document.getElementById("task-button").addEventListener("click", () => {
+        saveChatState({ step: "input" });
+        go("recommendation");
+      });
+    }
+
+    function renderSelect(step) {
+      clearParticipantState();
+      const main = document.getElementById("main");
+      main.className = "study-main entry-wrap";
+      const cards = GROUPS.map((g) => {
+        const remindText = g.remind === 1 ? "有提醒" : "无提醒";
+        const scopeText = g.scope === 1 ? "仅最近会话" : "全部会话";
+        const goodsText = g.goods === 1 ? "笔记本电脑" : "电脑包";
+        return (
+          '<a class="group-card" href="#/start" data-group="' + g.id + '">' +
+          '<div class="group-card-head"><span class="group-card-name">组' + g.id + "</span>" +
+          '<span class="group-badge">第 ' + g.id + " 组</span></div>" +
+          '<div class="group-param-list">' +
+          "<div>推荐页提醒：<b>" + remindText + "</b></div>" +
+          "<div>权限告知范围：<b>" + scopeText + "</b></div>" +
+          "<div>本次商品：<b>" + goodsText + "</b></div>" +
+          "</div>" +
+          '<div class="group-card-cta">进入该组体验 →</div>' +
+          "</a>"
+        );
+      }).join("");
+
+      main.innerHTML =
+        '<section class="entry-hero">' +
+        "<h1 class=\"entry-title\">购物体验研究</h1>" +
+        '<p class="entry-intro">这里是静态界面演示，供研究者在展示前浏览八组页面。选择一组后即可从知情同意开始完整走一遍流程；问卷提交为模拟成功，不会写入任何研究数据。</p>' +
+        '<div class="entry-tags">' +
+        '<span class="entry-tag">权限告知随范围变化</span>' +
+        '<span class="entry-tag">推荐回复随提醒条件变化</span>' +
+        '<span class="entry-tag">商品随物品类别变化</span>' +
+        "</div></section>" +
+        '<h2 class="entry-section-title">选择演示组</h2>' +
+        '<p class="entry-sub">演示会记住当前选择；若中途返回这里，将从这一组重新开始。</p>' +
+        '<div class="group-grid">' + cards + "</div>" +
+        '<div class="entry-foot">' +
+        "<span>如需重新开始，可先清空本页面的本地存储；本页面不使用任何外部追踪服务。</span>" +
+        '<button type="button" class="clear-link" id="clear-demo">清空演示选择与临时数据</button>' +
+        "</div>";
+
+      document.querySelectorAll(".group-card").forEach((card) => {
+        card.addEventListener("click", () => {
+          saveTo(GROUP_KEY, Number(card.dataset.group));
+          clearParticipantState();
+          setDone(false);
+        });
+      });
+      document.getElementById("clear-demo").addEventListener("click", () => {
+        clearKey(GROUP_KEY);
+        clearParticipantState();
+        window.location.reload();
+      });
+    }
+
+    function renderExited(step) {
+      const main = document.getElementById("main");
+      main.className = "study-main narrow";
+      main.innerHTML =
+        '<section class="agent-panel">' +
+        "<h1 class=\"agent-title\">" + esc(CONTENT.exit.title) + "</h1>" +
+        '<p class="agent-text">' + esc(CONTENT.exit.text) + "</p></section>";
+    }
+
+    function renderDone(step) {
+      if (!isDone()) {
+        go("select");
+        return;
+      }
+      const main = document.getElementById("main");
+      main.className = "study-main narrow";
+      main.innerHTML =
+        '<section class="agent-panel done-panel">' +
+        '<svg class="done-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+        '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>' +
+        "</svg>" +
+        "<h1 class=\"agent-title\">" + esc(CONTENT.end.title) + "</h1>" +
+        '<p class="agent-text">' + esc(CONTENT.end.text) + "</p>" +
+        '<div class="demo-note">本页是静态演示的模拟完成页。正式版会把提交写入 PostgreSQL，并在研究后台生成统计与 CSV 导出；这里不产生任何研究记录。</div>' +
+        "</section>";
+    }
+
+    function chatIconSvg() {
+      return (
+        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+        '<path d="M12 8V4H8"></path><rect width="16" height="12" x="4" y="8" rx="2"></rect>' +
+        '<path d="M2 14h2"></path><path d="M20 14h2"></path><path d="M15 13v2"></path><path d="M9 13v2"></path>' +
+        "</svg>"
+      );
+    }
+
+    function renderRecommendation(step) {
+      const group = getGroup();
+      if (!group) {
+        go("select");
+        return;
+      }
+      const main = document.getElementById("main");
+      main.className = "study-main";
+      const goods = CONTENT.recommend.goods[group.goods];
+      const taskMessage = CONTENT.task[group.goods].text;
+
+      main.innerHTML =
+        progressHtml("recommendation") +
+        '<section class="chat-panel" aria-label="购物助手对话">' +
+        '<div class="chat-head">' +
+        '<span class="chat-avatar" aria-hidden="true">' + chatIconSvg() + "</span>" +
+        "<div><strong>购物助手</strong><span>商品推荐对话</span></div>" +
+        "</div>" +
+        '<div class="chat-messages" id="chat-messages"></div>' +
+        '<div class="chat-composer" id="chat-composer"></div>' +
+        "</section>";
+
+      const messagesBox = document.getElementById("chat-messages");
+      const composerBox = document.getElementById("chat-composer");
+
+      function renderComposer() {
+        composerBox.innerHTML =
+          '<div class="chat-input-wrap">' +
+          '<label style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);" for="task-message">本次购物需求</label>' +
+          '<input id="task-message" class="chat-input" type="text" value="' + esc(taskMessage) + '" readonly>' +
+          '<button type="button" class="chat-send" id="send-task">' + esc(CONTENT.recommend.send) + "</button>" +
+          "</div>" +
+          "<p class=\"chat-hint\">按 Enter 发送</p>";
+        document.getElementById("send-task").addEventListener("click", sendTask);
+        document.getElementById("task-message").addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            sendTask();
+          }
+        });
+      }
+
+      function sendTask() {
+        saveChatState({ step: "typing" });
+        renderMessages();
+      }
+
+      function renderMessages() {
+        const stateNow = getChatState();
+        if (stateNow.step === "typing") {
+          messagesBox.innerHTML =
+            '<div class="chat-row chat-row-user"><div class="chat-bubble chat-bubble-user">' +
+            esc(taskMessage) + "</div></div>" +
+            '<div class="chat-row chat-row-assistant"><div class="chat-bubble chat-bubble-assistant chat-typing">' +
+            '<span class="typing-dots" aria-hidden="true"><i></i><i></i><i></i></span>' +
+            esc(CONTENT.recommend.typing) + "</div></div>";
+          composerBox.innerHTML = "";
+          window.setTimeout(() => {
+            const current = getChatState();
+            if (current.step === "typing") {
+              saveChatState({ step: "reply" });
+              renderMessages();
+            }
+          }, 900);
+          return;
+        }
+        if (stateNow.step === "reply") {
+          const itemCards = goods.items
+            .map(
+              (item) =>
+                '<article class="product-card">' +
+                "<h2 class=\"product-name\">" + esc(item.name) + "</h2>" +
+                '<p class="product-desc">' + esc(item.description) + "</p>" +
+                "</article>"
+            )
+            .join("");
+          messagesBox.innerHTML =
+            '<div class="chat-row chat-row-user"><div class="chat-bubble chat-bubble-user">' +
+            esc(taskMessage) + "</div></div>" +
+            '<div class="chat-row chat-row-assistant"><div class="chat-bubble chat-bubble-assistant">' +
+            "<p>" + esc(CONTENT.recommend.opening[group.goods]) + "</p>" +
+            '<p class="chat-remind">' + esc(CONTENT.recommend.remind[group.remind]) + "</p>" +
+            '<div class="chat-product-grid">' + itemCards + "</div>" +
+            '<div class="chat-actions">' +
+            '<button type="button" class="btn-primary" id="to-questionnaire">' + esc(CONTENT.recommend.button) + "</button>" +
+            "</div></div></div>";
+          document.getElementById("to-questionnaire").addEventListener("click", () => go("questionnaire"));
+          window.setTimeout(() => {
+            messagesBox.lastElementChild?.scrollIntoView({ behavior: "smooth", block: "start" });
+          }, 80);
+          return;
+        }
+        renderComposer();
+      }
+
+      renderMessages();
+    }
+
+    function renderQuestionnaire(step) {
+      const group = getGroup();
+      if (!group) {
+        go("select");
+        return;
+      }
+      const main = document.getElementById("main");
+      main.className = "study-main narrow";
+      const answers = getAnswers();
+      const sectionsHtml = CONTENT.questionnaire.sections
+        .map(
+          (section) =>
+            "<section>" +
+            '<h2 class="agent-subtitle">' + esc(section.heading) + "</h2>" +
+            section.questions
+              .map(
+                (q) =>
+                  '<fieldset class="question-fieldset" data-question="' + q.id + '" tabindex="-1">' +
+                  '<legend class="question-legend" id="legend-' + q.id + '">' + esc(q.text) + "</legend>" +
+                  '<div class="scale-row" role="radiogroup" aria-labelledby="legend-' + q.id + '">' +
+                  CONTENT.questionnaire.scale
+                    .map(
+                      (option) =>
+                        '<label class="scale-option" for="' + q.id + "-" + option.value + '">' +
+                        '<input id="' + q.id + "-" + option.value + '" type="radio" name="' + q.id +
+                        '" value="' + option.value + '"' + (answers[q.id] === option.value ? " checked" : "") + ">" +
+                        "<span>" + option.value + "</span><small>" + esc(option.label) + "</small>" +
+                        "</label>"
+                    )
+                    .join("") +
+                  "</div></fieldset>"
+              )
+              .join("") +
+            "</section>"
+        )
+        .join("");
+
+      main.innerHTML =
+        progressHtml("questionnaire") +
+        '<section class="agent-panel">' +
+        '<p class="agent-text" style="margin-bottom:18px;">' + esc(CONTENT.questionnaire.instruction) + "</p>" +
+        sectionsHtml +
+        '<div id="form-error"></div>' +
+        '<div class="submit-row">' +
+        '<button type="button" class="btn-primary" id="submit-questionnaire">' + esc(CONTENT.questionnaire.submit) + "</button>" +
+        "</div></section>";
+
+      main.querySelectorAll("input[type=radio]").forEach((input) => {
+        input.addEventListener("change", () => {
+          const next = Object.assign({}, getAnswers(), { [input.name]: input.value });
+          saveAnswers(next);
+        });
+      });
+
+      document.getElementById("submit-questionnaire").addEventListener("click", () => {
+        const current = getAnswers();
+        const missing = CONTENT.questionnaire.sections
+          .flatMap((s) => s.questions)
+          .find((q) => !current[q.id]);
+        const errorBox = document.getElementById("form-error");
+        if (missing) {
+          const number = Number(missing.id.replace("q", ""));
+          errorBox.innerHTML = '<p class="form-error">请完成第 ' + number + " 题后再提交。</p>";
+          const field = main.querySelector('[data-question="' + missing.id + '"]');
+          const legend = main.querySelector("#legend-" + missing.id);
+          if (legend) legend.classList.add("question-missing");
+          field?.scrollIntoView({ behavior: "smooth", block: "center" });
+          field?.focus();
+          return;
+        }
+        errorBox.innerHTML = "";
+        setDone(true);
+        go("done");
+      });
+    }
+
+    function render(step) {
+      renderHeader(step);
+      renderDemoTop(step);
+      if (step === "select" || step === "") {
+        renderSelect(step);
+      } else if (step === "consent" || step === "start") {
+        renderStart(step);
+      } else if (step === "history") {
+        renderHistory(step);
+      } else if (step === "permission") {
+        renderPermission(step);
+      } else if (step === "task") {
+        renderTask(step);
+      } else if (step === "recommendation") {
+        renderRecommendation(step);
+      } else if (step === "questionnaire") {
+        renderQuestionnaire(step);
+      } else if (step === "done") {
+        renderDone(step);
+      } else if (step === "exited") {
+        renderExited(step);
+      } else {
+        go("select");
+        return;
+      }
+      window.scrollTo(0, 0);
+    }
+
+    window.addEventListener("hashchange", () => render(getRoute()));
+    window.addEventListener("beforeunload", (event) => {
+      const step = getRoute();
+      if (
+        ["consent", "history", "permission", "task", "recommendation", "questionnaire"].includes(step) &&
+        getGroup()
+      ) {
+        event.preventDefault();
+        event.returnValue = "";
+      }
+    });
+
+    render(getRoute());
+  </script>
+</body>
+</html>

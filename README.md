@@ -84,3 +84,7 @@ pnpm test:e2e
 - [内部研究说明与统计边界](docs/research-notes.md)
 - [部署、域名、HTTPS、备份与恢复](docs/deployment-and-backup.md)
 - [测试与验证记录](docs/verification.md)
+
+## 静态界面演示
+
+`demo/` 目录是独立的纯静态界面演示版，可发布到 GitHub Pages，供老师浏览八组页面与完整交互，不接入数据库、不含管理后台。入口选择八组之一后，可体验知情同意 → 历史记录 → 权限告知 → 购买任务 → 推荐对话 → 问卷 → 结束；问卷提交为模拟结果，不产生研究记录。详细说明见 [demo/README.md](demo/README.md)，自动发布配置见 [pages-demo.yml](.github/workflows/pages-demo.yml)。
